@@ -2,7 +2,6 @@ import random
 import numpy as np
 import time
 import matplotlib.pyplot as plt
-from stanfordcorenlp import StanfordCoreNLP
 import json
 
 class Trie(object):
@@ -259,35 +258,6 @@ def random_weights_training():
     plt.legend(loc='upper center')
     plt.grid(True)
     plt.show()
-
-
-def trained_weights_training():
-    nlp = StanfordCoreNLP('http://localhost', port=9000)
-    # Configure the server to output probabilities
-    props = {
-        'annotators': 'depparse',
-        'outputFormat': 'json',
-        'depparse.probabilistic': 'true'  # This enables the probabilistic parsing
-    }
-
-    # Your sentence
-    sentence = "John loves Mary."
-    # Parse the sentence
-    result = nlp.annotate(sentence, properties=props)
-    result = json.loads(result)
-    # Access the probabilities for each dependency tree
-    for sentence in result['sentences']:
-        for edge in sentence['enhancedPlusPlusDependencies']:
-            gov_index = edge['governor']
-            dep_index = edge['dependent']
-            dep_label = edge['dep']
-            probability = edge['prob']
-            print(
-                f"{sentence['tokens'][gov_index - 1]['word']} --{dep_label}--> {sentence['tokens'][dep_index - 1]['word']} (Probability: {probability})")
-
-    # Close the CoreNLP server
-    nlp.close()
-
 
 def test_swor():
     dependency_trees = []
